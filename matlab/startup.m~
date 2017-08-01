@@ -25,4 +25,4 @@ addpath(genpath('~/git/BrainTools/'))
 addpath(genpath('~/git/vistasoft/'))
 addpath(genpath('~/matlab/'))
 addpath(genpath('/mnt/scratch/projects/freesurfer/'))
-
+addpath(genpath('/usr/local/freesurfer'))

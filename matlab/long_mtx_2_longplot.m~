@@ -1,0 +1,35 @@
+% Function which iterates through a 3D matrix and creates a longitudinal
+% plot which tracks the change in cortical thickness in the ROIs over time.
+%
+% Inputs:
+% long_mtx: 3D matrix organized such that:
+%   Column 1 is the subject ID
+%   Columns 2-5 are the thickness average of the ROI at a 
+%   Column 3 is the timepoint
+
+
+function long_mtx_2_longplot(long_mtx,hemi,covar,sessions,outpath)
+mtx_size = size(long_mtx);
+for ii = 1:mtx_size(3)
+    nn = 1;
+    for jj = 1:numel(sessions)
+        sess_data = long_mtx(:,1+sessions(jj),ii);
+        if iscell(sess_data)
+            sess_data = cell2mat(sess_data);
+        end
+        timepoint_avgs(nn) = mean(sess_data);
+        timepoint_SEMs(nn) = std(sess_data)/...
+            sqrt(numel(sess_data));
+        nn = nn + 1;
+    end
+    set(0,'DefaultFigureVisible','off');
+    fig = figure; hold on
+    errorbar(sessions,timepoint_avgs,timepoint_SEMs,'b')
+    legend(covar,'Location','southwest');
+    box off
+    xlabel('Timepoint')
+    ylabel(strcat('Cortical Thickness in',[' '],hemi,[' '],long_mtx{1,6,ii}))
+    saveas(fig,fullfile(outpath,strcat(hemi,long_mtx{1,6,ii},'_',covar,'.jpg')))
+    set(0,'DefaultFigureVisible','on');
+end
+end
