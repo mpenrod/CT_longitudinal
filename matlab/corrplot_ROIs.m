@@ -16,12 +16,13 @@
 % sessions: sessions for which data is taken from the sub data group
 % tpIDs: identifications of subjects timepoints notated as subject_1,
 % subject_2, etc.
+% plot_data: a boolean which determines whether data should be plotted or not
 % outpath: path to folder which plots will be stored in 
 %
 % Author: Mark Penrod
 % Date: July 19, 2017
 
-function out_mtx = corrplot_ROIs(clustnum_mgh,clustsum,hemi,covar,covar_label,data,sub_data,sessions,tpIDs,outpath)
+function out_mtx = corrplot_ROIs(clustnum_mgh,clustsum,hemi,covar,covar_label,data,sub_data,sessions,tpIDs,plot_data,outpath)
 % load in the cluster number surface
 [vol,M] = load_mgh(clustnum_mgh);
 clusters = zeros(1,max(vol));
@@ -85,14 +86,16 @@ for ii = 1:cols(clusters)
     else 
         out_mtx = [];
     end
-%     plot the data and save
-%     plot(avg_thickness',covar,'.k','MarkerSize', 15)
-%     [corr_val,pval] = corr(avg_thickness',covar,'rows','pairwise');
-%     box off, lsline
-%     xlabel(strcat('Cortical Thickness in ',[' ', clustsum.Annot(ii)]))
-%     ylabel(covar_label)
-%     title(strcat('r= ', [' ',num2str(corr_val)],' pval=',[' ',num2str(pval)]))
-%     hold off
-%     saveas(fig,char(fullfile(outpath,strcat('corr_',hemi,clustsum.Annot(ii),'.jpg'))))
-%     set(0,'DefaultFigureVisible','on');
+if plot_data
+    %plot the data and save
+    plot(avg_thickness',covar,'.k','MarkerSize', 15)
+    [corr_val,pval] = corr(avg_thickness',covar,'rows','pairwise');
+    box off, lsline
+    xlabel(strcat('Cortical Thickness in ',[' ', clustsum.Annot(ii)]))
+    ylabel(covar_label)
+    title(strcat('r= ', [' ',num2str(corr_val)],' pval=',[' ',num2str(pval)]))
+    hold off
+    saveas(fig,char(fullfile(outpath,strcat('corr_',hemi,clustsum.Annot(ii),'.jpg'))))
+    set(0,'DefaultFigureVisible','on');
+end
 end
